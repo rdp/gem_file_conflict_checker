@@ -14,6 +14,7 @@ describe "conflict plugin" do
   end
   
   it "should alert you of gem conflicts" do
+    _dbg
      @a.check Gem.push_all_highest_version_gems_on_load_path
   end
   
