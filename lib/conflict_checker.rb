@@ -4,7 +4,7 @@ class ConflictChecker
     existing_list = {}
     conflict_list = []
 
-    for dir in dirs
+    for dir in dirs.flatten
       for file in Dir[dir + '/*'] do
         just_file_name = File.filename(file)
         if existing_list[just_file_name]
