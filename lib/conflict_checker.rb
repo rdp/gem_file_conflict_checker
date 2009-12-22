@@ -10,6 +10,7 @@ class ConflictChecker
         if existing_list[just_file_name]
           conflict_list << [existing_list[just_file_name], file]
         end
+        existing_list[just_file_name] = file
       end
     end
     conflict_list

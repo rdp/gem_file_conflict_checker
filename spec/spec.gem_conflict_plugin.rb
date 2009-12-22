@@ -10,6 +10,7 @@ describe "conflict plugin" do
   end
 
   it "should alert you of potential conflicts" do
+    _dbg
     @a.check(*@b).should == [['test1/go.rb', 'test2/go.rb']]
   end
 
