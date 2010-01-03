@@ -48,14 +48,21 @@ The post install hook warned me of the problem, and I promptly uninstalled the o
 
 ================== Usage/Installation
 
-$ gem install gem_conflict_plugin
-$ gem install gem_conflict_plugin # install it twice so that by the time you install it the second time, its install hook will run and warn you of any conflicts.  Any gem install after this point will also warn you.
+$ gem install gem_file_conflict_checker
+$ gem install gem_file_conflict_checker 
+# install it twice so that it will run its post install hooks and warn you of any conflicts.  Any gem install after this point will also warn you.
+
+
+This is especially useful for those of us who are using various versions of gems and forking them and installing our own versions, etc., to sanity check which gems are installed.  It is hoped that a future version of rubygems will alleviate this problem, and patches have been proposed [1].
 
 Enjoy.
 
 -r
 
+Feedback welcome:
+http://github.com/rdp/gem_file_conflict_checker
+
 refs:
 
-http://rubyforge.org/tracker/index.php?func=detail&aid=27318&group_id=126&atid=578
+[1] http://rubyforge.org/tracker/index.php?func=detail&aid=27318&group_id=126&atid=578
 http://www.ruby-forum.com/topic/190217
