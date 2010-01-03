@@ -31,7 +31,7 @@ class ConflictChecker
     if collisions.length > 0
       puts "warning: collisions detected (they may be unexpected! Your rubygems' have two or more gems with conflicting filenames..."
       for filename, gems in collisions
-        puts "\"#{filename}\" is found redundantly in: #{gems.inspect}"
+        puts "\"#{filename}\" was  found redundantly in the libs of: #{gems.inspect}"
       end
     else
       puts "all clean--your rubygems has no reported conflicting filenames"
