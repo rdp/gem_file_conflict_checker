@@ -1,4 +1,4 @@
-= gem_conflict_plugin
+= gem_file_conflict_checker 
 
 This is a rubygems plugin that warns warn you when you accidentally install gems that have filenames that collide and hence are unstable.
 
