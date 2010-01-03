@@ -25,15 +25,13 @@ describe "conflict plugin" do
  "lib/map_reduce/file.rb"]
 =end
   
-  it "should alert you of gem conflicts" do
-     pending
-  
-     
-     @a.check Gem.push_all_highest_version_gems_on_load_path
+  it "should also do subdir clashes" do
+    conflict = {:lib1 => ['lib/y/go.rb'], :lib2 => ['lib/y/go.rb']}
+    @a.check(conflict).should == {'lib/y/go.rb' => [:lib1, :lib2]}
   end
-  
-  it "should also do subdir clashes"
 
-  it "should work with non lib directories"
+  it "should work with non lib directories" do
+    pending "request"
+  end
 
 end
