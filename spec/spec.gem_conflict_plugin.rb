@@ -52,8 +52,11 @@ describe "conflict plugin" do
   it "should ignore directory looking entires" do
     conflict = {:lib1 => ['lib/y/go.so'], :lib2 => ['lib/y/go']}
     @a.check(conflict).should == {}
-    
   end
   
+  it "should ignore plugins which can be redundant" do
+    conflict = {:lib1 => ['lib/y/go_plugin.rb'], :lib2 => ['lib/y/go_plugin.rb']}
+    @a.check(conflict).should == {}
+  end
   
 end

@@ -12,11 +12,18 @@ class ConflictChecker
       for file in files
         orig_file = file.dup
         file = file.split('/')[1..-1].join('/') # strip off lib/
+        
+        
+        if file =~ /_plugin.rb$/ # ignore lib/rubygems_plugin.rb, which *can* be redundant across gems
+          next
+        end
+        
         if file =~ /(.rb|.so)$/
           file = file.split('.')[0..-2].join('.') # strip off .rb .so
         else
-         next
+         next # skip directories...
         end
+        
         if existing_list[file]
           # add it to the bad list
           if conflict_list[file]
