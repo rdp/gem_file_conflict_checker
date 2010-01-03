@@ -1,17 +1,61 @@
 = gem_conflict_plugin
 
-Description goes here.
+This is a rubygems plugin that warns warn you when you accidentally install gems that have filenames that collide and hence are unstable.
 
-== Note on Patches/Pull Requests
+Background:
+
+Currently with rubygems (1.3.5), if you install two gems that have same-named files, like
+
+gem1/lib/a.rb
+
+gem2/lib/a.rb
+
+Then do a
+
+require 'rubygems'
+require 'a'
+
+There is no guarantee of *which* a it is going to load.
+
+This can cause some really bizarre errors when, for example, in the middle of requiring gem1 gem, that gem does a
+
+require 'a'
+
+which ends up requiring a *from a totally different, unexpected, other gem*, like gem2.
+
+This can lead to unrelated looking errors, like
+
+'undefined method `sexp_type' for class `Sexp' (NameError)'
+
+or 'undefined constants Sane::OS'
+
+which really aren't helpful to deciphering the root cause (that you have conflicting gems installed).
+
+=============== What this gem does
+
+This gem creates a rubygems post_install hook that sanity checks your gems, looking for any files that could possibly conflict. If there is a conflict, it outputs a warning message to the screen about it.
+
+ex:
+
+E:\>gem install require_all
+warning: gem_conflict_plugin: conflicts detected! (they may be expected) your rubygems have one or more gems with conflicting lib/* filenames...
+ "require_all" was found redundantly in the libs of these gems: rdp-require_all (lib/require_all.rb), require_all (lib/require_all.rb)
  
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
 
-== Copyright
+In this example two gems were installed with conflicting (competing) filenames--require_all.rb was found in rdp-require_all and require_all.
 
-Copyright (c) 2009 rdp. See LICENSE for details.
+The post install hook warned me of the problem, and I promptly uninstalled the one I didn't want so that there would be no confusion.
+
+================== Usage/Installation
+
+$ gem install gem_conflict_plugin
+$ gem install gem_conflict_plugin # install it twice so that by the time you install it the second time, its install hook will run and warn you of any conflicts.  Any gem install after this point will also warn you.
+
+Enjoy.
+
+-r
+
+refs:
+
+http://rubyforge.org/tracker/index.php?func=detail&aid=27318&group_id=126&atid=578
+http://www.ruby-forum.com/topic/190217
