@@ -1,16 +1,21 @@
 class ConflictChecker
 
-  def check *dirs
+  # check some files
+  # expects input like
+  # :lib1 => 'lib/file1.rb',
+  # :lib2 => 'lib/file2.rb'
+  def check names_with_files
     existing_list = {}
-    conflict_list = []
-
-    for dir in dirs.flatten
-      for file in Dir[dir + '/*'] do
-        just_file_name = File.filename(file)
-        if existing_list[just_file_name]
-          conflict_list << [existing_list[just_file_name], file]
-        end
-        existing_list[just_file_name] = file
+    conflict_list = {}
+_dbg
+    for name, files in names_with_files
+      for file in files
+          
+          if existing_list[file]
+            # add it to the bad list
+            conflict_list[file] = [existing_list[file], name]
+          end
+          existing_list[file] = name
       end
     end
     conflict_list

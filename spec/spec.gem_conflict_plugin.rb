@@ -5,13 +5,14 @@ require 'rubygems'
 
 describe "conflict plugin" do
 
-   before do
+  before do
     @a = ConflictChecker.new
     Gem.clear_paths 
   end
 
   it "should alert you of potential conflicts" do
-    @a.check('test1', 'test2').should == [['test1/go.rb', 'test2/go.rb']]
+    conflict = {:lib1 => ['lib/go.rb'], :lib2 => ['lib/go.rb']}
+    @a.check(conflict).should == {'lib/go.rb' => [:lib1, :lib2]}
   end
 
 =begin example  
@@ -25,16 +26,14 @@ describe "conflict plugin" do
 =end
   
   it "should alert you of gem conflicts" do
+     pending
+  
      
-     # dirs => name    
-     Gem.source_index.latest_specs.map{|s| [s.name, s.version.version]}.sort
      @a.check Gem.push_all_highest_version_gems_on_load_path
   end
   
-  it "should allow for star" do
-    @a.check *Gem.push_all_highest_version_gems_on_load_path
-  end
-  
   it "should also do subdir clashes"
+
+  it "should work with non lib directories"
 
 end
