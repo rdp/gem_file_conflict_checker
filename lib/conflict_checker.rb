@@ -42,11 +42,12 @@ class ConflictChecker
     all = {}; Gem.source_index.latest_specs.map{|s| all[s.name] = s.lib_files}
     collisions = ConflictChecker.new.check all
     if collisions.length > 0
-      puts "warning: gem collisions detected! (they may be expected) your rubygems have one or more gems with conflicting filenames..."
+      puts "warning: gem_conflict_plugin: conflicts detected! (they may be expected) your rubygems have one or more gems with conflicting lib/* filenames..."
       for filename, gems in collisions
         print " \"#{filename}\" was found redundantly in the libs of these gems: "
         puts gems.map{|gem_name, file_name| "#{gem_name} (#{file_name})"}.join(', ')
       end
+      puts
     else
       puts "all clean--your rubygems has no reported conflicting filenames"
     end
