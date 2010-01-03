@@ -10,16 +10,22 @@ class ConflictChecker
 
     for name, files in names_with_files
       for file in files
-        file = file.split('/')[1..-1].join('/')
+        orig_file = file.dup
+        file = file.split('/')[1..-1].join('/') # strip off lib/
+        if file =~ /(.rb|.so)$/
+          file = file.split('.')[0..-2].join('.') # strip off .rb .so
+        else
+         next
+        end
         if existing_list[file]
           # add it to the bad list
           if conflict_list[file]
-            conflict_list[file] << name # add it to the list...
+            conflict_list[file] << [name, orig_file] # add it to the list...
           else
-           conflict_list[file] = [existing_list[file], name]
+           conflict_list[file] = [existing_list[file], [name, orig_file]]
          end
         end
-        existing_list[file] = name
+        existing_list[file] = [name, orig_file]
       end
     end
     conflict_list
@@ -29,9 +35,10 @@ class ConflictChecker
     all = {}; Gem.source_index.latest_specs.map{|s| all[s.name] = s.lib_files}
     collisions = ConflictChecker.new.check all
     if collisions.length > 0
-      puts "warning: collisions detected (they may be unexpected! Your rubygems' have two or more gems with conflicting filenames..."
+      puts "warning: gem collisions detected! (they may be expected) your rubygems have one or more gems with conflicting filenames..."
       for filename, gems in collisions
-        puts "\"#{filename}\" was  found redundantly in the libs of: #{gems.inspect}"
+        print " \"#{filename}\" was found redundantly in the libs of these gems: "
+        puts gems.map{|gem_name, file_name| "#{gem_name} (#{file_name})"}.join(', ')
       end
     else
       puts "all clean--your rubygems has no reported conflicting filenames"

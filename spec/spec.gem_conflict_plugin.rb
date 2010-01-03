@@ -12,7 +12,7 @@ describe "conflict plugin" do
 
   it "should alert you of potential conflicts" do
     conflict = {:lib1 => ['lib/go.rb'], :lib2 => ['lib/go.rb']}
-    @a.check(conflict).should == {'go.rb' => [:lib1, :lib2]}
+    @a.check(conflict).should == {"go"=>[[:lib1, "lib/go.rb"], [:lib2, "lib/go.rb"]]}
   end
 
 =begin example  
@@ -27,7 +27,7 @@ describe "conflict plugin" do
   
   it "should also do subdir clashes" do
     conflict = {:lib1 => ['lib/y/go.rb'], :lib2 => ['lib/y/go.rb']}
-    @a.check(conflict).should == {'y/go.rb' => [:lib1, :lib2]}
+    @a.check(conflict).should == {"y/go"=>[[:lib1, "lib/y/go.rb"], [:lib2, "lib/y/go.rb"]]}
   end
 
   it "should work with non lib directories" do
@@ -38,11 +38,22 @@ describe "conflict plugin" do
     ConflictChecker.do_all_gems.should be_a(Hash)
   end
   
-  it "should detect collisions between .rb and .so"
+  it "should detect collisions between .rb and .so" do
+    conflict = {:lib1 => ['lib/y/go.so'], :lib2 => ['lib/y/go.rb']}
+    @a.check(conflict).should ==  {"y/go"=>[[:lib1, "lib/y/go.so"], [:lib2, "lib/y/go.rb"]]}
+    
+  end
   
   it "should do triple collisions" do
     conflict = {:lib1 => ['lib/go.rb'], :lib2 => ['lib/go.rb'], :lib3 => ['lib/go.rb']}
-    @a.check(conflict).should == {'go.rb' => [:lib1, :lib2, :lib3]}
+    @a.check(conflict).should ==  {"go"=>[[:lib1, "lib/go.rb"], [:lib2, "lib/go.rb"], [:lib3, "lib/go.rb"]]}
   end
+  
+  it "should ignore directory looking entires" do
+    conflict = {:lib1 => ['lib/y/go.so'], :lib2 => ['lib/y/go']}
+    @a.check(conflict).should == {}
+    
+  end
+  
   
 end
